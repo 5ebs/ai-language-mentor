@@ -1,113 +1,213 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useEffect, useRef } from 'react';
+import { ChevronRight, Globe, MessageCircle, Edit3, Clipboard, Headphones, Lightbulb } from 'lucide-react';
+import { motion, useAnimation, useInView } from 'framer-motion';
+
+const mentors = [
+  {
+    name: 'English Mentor',
+    url: 'https://www.learnenglishmentor.com/',
+    flag: '/en.png',
+  },
+  {
+    name: 'Deutsch Mentor',
+    url: 'https://deutsch-mentor.com/',
+    flag: '/de.png',
+  },
+  {
+    name: 'Italian Mentor',
+    url: 'https://www.learnitalianmentor.com/',
+    flag: '/it.png',
+  },
+];
+
+const bounceVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.6,
+      ease: [0.175, 0.885, 0.32, 1.275],
+    },
+  },
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: 'easeOut',
+    },
+  },
+};
+
+const headingVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: 'easeOut' },
+  },
+};
+
+const benefits = [
+  { icon: Headphones, text: 'Your friendly companion available 24/7 for language adventures!' },
+  { icon: Lightbulb, text: 'Personalizes learning to your unique style and interests' },
+  { icon: MessageCircle, text: 'Enjoy smooth conversations with AI-powered chat suggestions' },
+  { icon: Edit3, text: 'Level up your grammar skills with fun, interactive tips' },
+  { icon: Clipboard, text: 'Master new words effortlessly with engaging flash cards' },
+  { icon: Globe, text: 'Break language barriers with instant translations at your fingertips' },
+];
+
+const year = new Date().getFullYear();
+const ondaDevLink = 'https://ondadev.com/';
+
+const LanguageMentors = () => {
+  const controls = useAnimation();
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+  const isLargeScreen = typeof window !== 'undefined' && window.innerWidth > 768;
+
+  useEffect(() => {
+    if (inView && isLargeScreen) {
+      controls.start('visible');
+    }
+  }, [controls, inView, isLargeScreen]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-gray-100 font-sans">
+      <main className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <motion.h1
+          className="text-5xl font-extrabold text-center mb-16 text-white"
+          initial="hidden"
+          animate="visible"
+          variants={headingVariants}
+        >
+          Learn a New Language Online with AI
+        </motion.h1>
+
+        <section className="mb-24">
+          <motion.h2
+            className="text-4xl font-bold text-center mb-12 text-white"
+            initial="hidden"
+            animate="visible"
+            variants={headingVariants}
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            Meet Your Friendly Language Mentors
+          </motion.h2>
+          <div className="grid md:grid-cols-3 gap-12">
+            {mentors.map((mentor) => (
+              <motion.a
+                key={mentor.name}
+                href={mentor.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-white rounded-3xl shadow-lg overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                initial="hidden"
+                animate="visible"
+                variants={cardVariants}
+              >
+                <div className="p-8 text-center">
+                  <img src={mentor.flag} alt={`${mentor.name} flag`} className="w-20 h-auto mb-6 mx-auto rounded" />
+                  <h3 className="text-2xl font-semibold mb-4 text-gray-800">{mentor.name}</h3>
+                  <span className="inline-flex items-center text-purple-600 hover:text-purple-800 transition-colors duration-300">
+                    Start your adventure <ChevronRight className="ml-1 w-5 h-5" />
+                  </span>
+                </div>
+              </motion.a>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-24" ref={ref}>
+          <motion.h2
+            className="text-4xl font-bold text-center mb-12 text-white"
+            initial="hidden"
+            animate="visible"
+            variants={bounceVariants}
+          >
+            Discover the Magic of AI Language Learning
+          </motion.h2>
+          <motion.div
+            className="grid md:grid-cols-2 gap-12"
+            initial="hidden"
+            animate={controls}
+            variants={{
+              visible: {
+                transition: { staggerChildren: 0.2 },
+              },
+            }}
+          >
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={index}
+                variants={
+                  isLargeScreen
+                    ? {
+                        hidden: {
+                          opacity: 0,
+                          x: index % 2 === 0 ? -50 : 50,
+                        },
+                        visible: {
+                          opacity: 1,
+                          x: 0,
+                          transition: {
+                            type: 'spring',
+                            damping: 12,
+                            stiffness: 100,
+                          },
+                        },
+                      }
+                    : {}
+                }
+                className="flex items-start bg-white rounded-3xl shadow-md p-8 transition-all duration-300 hover:shadow-xl"
+                whileHover={{
+                  scale: 1.05,
+                  rotate: 2,
+                  transition: { duration: 0.3 },
+                  boxShadow: '0 10px 15px rgba(0, 0, 0, 0.3)',
+                }}
+              >
+                <benefit.icon className="w-10 h-10 text-pink-500 mr-6 flex-shrink-0" />
+                <p className="text-lg text-gray-800">{benefit.text}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </section>
+      </main>
+
+      <footer className="bg-white mt-24">
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center text-gray-600">
+          <p>
+            &copy; {year}{' '}
+            <a
+              href={ondaDevLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black-600 hover:text-black-800 transition-colors duration-300"
+            >
+              Powered by OndaDev.com
+            </a>
+          </p>
         </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      </footer>
+    </div>
   );
-}
+};
+
+export default LanguageMentors;
